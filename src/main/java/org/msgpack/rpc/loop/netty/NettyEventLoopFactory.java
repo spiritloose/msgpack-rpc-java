@@ -30,8 +30,8 @@ public class NettyEventLoopFactory implements EventLoopFactory {
 
     public EventLoop make(ExecutorService workerExecutor,
             ExecutorService ioExecutor,
-            ScheduledExecutorService scheduledExecutor, MessagePack messagePack) {
+            ScheduledExecutorService scheduledExecutor, MessagePack messagePack, int workerCount) {
         return new NettyEventLoop(workerExecutor, ioExecutor,
-                scheduledExecutor, messagePack);
+                scheduledExecutor, messagePack, workerCount);
     }
 }

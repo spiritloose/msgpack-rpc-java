@@ -24,7 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public interface EventLoopFactory {
     public EventLoop make(ExecutorService workerExecutor, ExecutorService ioExecutor,
-            ScheduledExecutorService scheduledExecutor, MessagePack messagePack);
+            ScheduledExecutorService scheduledExecutor, MessagePack messagePack, int workerCount);
 
     // TODO Map<String, String> EventLoopConfig
 }

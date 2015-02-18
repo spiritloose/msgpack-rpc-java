@@ -82,13 +82,21 @@ public abstract class EventLoop {
     static public EventLoop start(
             ExecutorService workerExecutor, ExecutorService ioExecutor,
             ScheduledExecutorService scheduledExecutor, MessagePack messagePack) {
-        return getFactory().make(workerExecutor, ioExecutor, scheduledExecutor, messagePack);
+        return start(workerExecutor, ioExecutor, scheduledExecutor, messagePack,
+                2 * Runtime.getRuntime().availableProcessors());
+    }
+
+    static public EventLoop start(
+            ExecutorService workerExecutor, ExecutorService ioExecutor,
+            ScheduledExecutorService scheduledExecutor, MessagePack messagePack, int workerCount) {
+        return getFactory().make(workerExecutor, ioExecutor, scheduledExecutor, messagePack, workerCount);
     }
 
     private ExecutorService workerExecutor;
     private ExecutorService ioExecutor;
     private ScheduledExecutorService scheduledExecutor;
     private MessagePack messagePack;
+    private int workerCount;
 
     public MessagePack getMessagePack() {
         return messagePack;
@@ -99,11 +107,12 @@ public abstract class EventLoop {
     }
 
     public EventLoop(ExecutorService workerExecutor, ExecutorService ioExecutor,
-            ScheduledExecutorService scheduledExecutor, MessagePack messagePack) {
+            ScheduledExecutorService scheduledExecutor, MessagePack messagePack, int workerCount) {
         this.workerExecutor = workerExecutor;
         this.scheduledExecutor = scheduledExecutor;
         this.ioExecutor = ioExecutor;
         this.messagePack = messagePack;
+        this.workerCount = workerCount;
     }
 
     public ExecutorService getWorkerExecutor() {
@@ -116,6 +125,10 @@ public abstract class EventLoop {
 
     public ScheduledExecutorService getScheduledExecutor() {
         return scheduledExecutor;
+    }
+
+    public int getWorkerCount() {
+        return workerCount;
     }
 
     public void shutdown() {

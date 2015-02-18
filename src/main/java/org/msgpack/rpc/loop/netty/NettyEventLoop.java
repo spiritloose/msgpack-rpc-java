@@ -35,8 +35,8 @@ import org.msgpack.rpc.config.TcpClientConfig;
 public class NettyEventLoop extends EventLoop {
     public NettyEventLoop(ExecutorService workerExecutor,
             ExecutorService ioExecutor,
-            ScheduledExecutorService scheduledExecutor, MessagePack messagePack) {
-        super(workerExecutor, ioExecutor, scheduledExecutor, messagePack);
+            ScheduledExecutorService scheduledExecutor, MessagePack messagePack, int workerCount) {
+        super(workerExecutor, ioExecutor, scheduledExecutor, messagePack, workerCount);
     }
 
     private ClientSocketChannelFactory clientFactory = null;
@@ -45,7 +45,7 @@ public class NettyEventLoop extends EventLoop {
     public synchronized ClientSocketChannelFactory getClientFactory() {
         if (clientFactory == null) {
             clientFactory = new NioClientSocketChannelFactory(getIoExecutor(),
-                    getWorkerExecutor()); // TODO: workerCount
+                    getWorkerExecutor(), getWorkerCount());
         }
         return clientFactory;
     }
@@ -53,7 +53,7 @@ public class NettyEventLoop extends EventLoop {
     public synchronized ServerSocketChannelFactory getServerFactory() {
         if (serverFactory == null) {
             serverFactory = new NioServerSocketChannelFactory(getIoExecutor(),
-                    getWorkerExecutor()); // TODO: workerCount
+                    getWorkerExecutor(), getWorkerCount());
             // messages will be dispatched to worker thread on server.
             // see useThread(true) in NettyTcpClientTransport().
         }
